@@ -1,9 +1,9 @@
-# hmpps-template-kotlin
+# hmpps-visits-prison-config-service
 
-[![repo standards badge](https://img.shields.io/badge/endpoint.svg?&style=flat&logo=github&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-template-kotlin)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-report/hmpps-template-kotlin "Link to report")
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-template-kotlin/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-template-kotlin)
-[![Docker Repository on Quay](https://img.shields.io/badge/quay.io-repository-2496ED.svg?logo=docker)](https://quay.io/repository/hmpps/hmpps-template-kotlin)
-[![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://hmpps-template-kotlin-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
+[![repo standards badge](https://img.shields.io/badge/endpoint.svg?&style=flat&logo=github&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-visits-prison-config-service)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-report/hmpps-visits-prison-config-service "Link to report")
+[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-visits-prison-config-service/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-visits-prison-config-service)
+[![Docker Repository on Quay](https://img.shields.io/badge/quay.io-repository-2496ED.svg?logo=docker)](https://quay.io/repository/hmpps/hmpps-visits-prison-config-service)
+[![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://hmpps-visits-prison-config-service-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
 
 Template github repo used for new Kotlin based projects.
 
@@ -17,7 +17,7 @@ within GitHub.
 This project is community managed by the mojdt `#kotlin-dev` slack channel.
 Please raise any questions or queries there. Contributions welcome!
 
-Our security policy is located [here](https://github.com/ministryofjustice/hmpps-template-kotlin/security/policy).
+Our security policy is located [here](https://github.com/ministryofjustice/hmpps-visits-prison-config-service/security/policy).
 
 ## Creating a Cloud Platform namespace
 
@@ -31,7 +31,7 @@ all typescript references and remove the elasticache configuration. Submit a PR 
 #ask-cloud-platform. Further instructions from the Cloud Platform team can be found in
 the [Cloud Platform User Guide](https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide)
 
-## Renaming from HMPPS Template Kotlin - github Actions
+## Renaming from HMPPS Visits Prison Config Service - github Actions
 
 Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
 Click the link to `Enable Actions on this repository`.
@@ -123,7 +123,7 @@ will build the application and run it and HMPPS Auth within a local docker insta
 ### Running the application in Intellij
 
 ```bash
-docker compose pull && docker compose up --scale hmpps-template-kotlin=0
+docker compose pull && docker compose up --scale hmpps-visits-prison-config-service=0
 ```
 
 will just start a docker instance of HMPPS Auth. The application should then be started with a `dev` active profile
