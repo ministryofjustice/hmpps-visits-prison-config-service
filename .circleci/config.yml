@@ -6,10 +6,10 @@ orbs:
 parameters:
   alerts-slack-channel:
     type: string
-    default: PIPELINE_SECURITY_SLACK_CHANNEL
+    default: visits-alerts
   releases-slack-channel:
     type: string
-    default: SLACK_RELEASES_CHANNEL
+    default: visits-alerts
 
 jobs:
   validate:
@@ -78,7 +78,7 @@ workflows:
 #          pipeline_number: <<pipeline.number>>
 #          context:
 #            - hmpps-common-vars
-#            - hmpps-template-kotlin-preprod
+#            - hmpps-visits-prison-config-service-preprod
 #          requires:
 #            - request-preprod-approval
 #          helm_timeout: 5m
@@ -97,7 +97,7 @@ workflows:
 #          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
 #          context:
 #            - hmpps-common-vars
-#            - hmpps-template-kotlin-prod
+#            - hmpps-visits-prison-config-service-prod
 #          requires:
 #            - request-prod-approval
 #          helm_timeout: 5m
@@ -105,7 +105,7 @@ workflows:
   security:
     triggers:
       - schedule:
-          cron: "15 7 * * 1-5"
+          cron: "7 6 * * 1-5"
           filters:
             branches:
               only:
@@ -130,7 +130,7 @@ workflows:
   security-weekly:
     triggers:
       - schedule:
-          cron: "0 5 * * 1"
+          cron: "12 6 * * 1"
           filters:
             branches:
               only:
