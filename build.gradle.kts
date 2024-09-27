@@ -18,15 +18,12 @@ dependencyCheck {
 }
 
 dependencies {
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.0.7")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-security")
-  implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-  implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
   implementation("org.springframework.boot:spring-boot-starter-cache")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
   implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.8.0")
 
   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2")
@@ -35,11 +32,9 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-common:2.6.0")
 
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.22")
-  testImplementation("com.github.tomakehurst:wiremock-jre8-standalone:3.0.1")
+  testImplementation("org.wiremock:wiremock-standalone:3.9.1")
   testImplementation("org.mockito:mockito-inline:5.2.0")
-  testImplementation("org.testcontainers:localstack:1.20.1")
   testImplementation("org.awaitility:awaitility-kotlin:4.2.2")
-  testImplementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.jsonwebtoken:jjwt:0.12.6")
 }

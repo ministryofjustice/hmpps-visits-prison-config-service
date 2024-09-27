@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.visits.prison.config.integration.wiremock
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import com.github.tomakehurst.wiremock.http.HttpHeader
@@ -21,6 +22,7 @@ class HmppsAuthApiExtension : BeforeAllCallback, AfterAllCallback, BeforeEachCal
 
   override fun beforeAll(context: ExtensionContext) {
     hmppsAuth.start()
+    hmppsAuth.stubGrantToken()
   }
 
   override fun beforeEach(context: ExtensionContext) {
@@ -53,6 +55,17 @@ class HmppsAuthMockServer : WireMockServer(WIREMOCK_PORT) {
               """.trimIndent(),
             ),
         ),
+    )
+  }
+
+  fun stubHealthPing(status: Int) {
+    stubFor(
+      get("/auth/health/ping").willReturn(
+        aResponse()
+          .withHeader("Content-Type", "application/json")
+          .withBody(if (status == 200) """{"status":"UP"}""" else """{"status":"DOWN"}""")
+          .withStatus(status),
+      ),
     )
   }
 }
