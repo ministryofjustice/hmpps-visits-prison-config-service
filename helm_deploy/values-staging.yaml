@@ -5,11 +5,11 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: hmpps-visits-prison-config-service-preprod.prison.service.justice.gov.uk
+    host: hmpps-visits-prison-config-service-staging.prison.service.justice.gov.uk
 
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: "applicationinsights.dev.json"
-    HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
+    HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
 
 generic-prometheus-alerts:
   alertSeverity: visits-alerts-nonprod
