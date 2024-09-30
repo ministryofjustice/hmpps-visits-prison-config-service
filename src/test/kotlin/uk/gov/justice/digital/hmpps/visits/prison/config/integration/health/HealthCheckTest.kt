@@ -1,13 +1,18 @@
-package uk.gov.justice.digital.hmpps.visitsprisonconfigservice.integration.health
+package uk.gov.justice.digital.hmpps.visits.prison.config.integration.health
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.visitsprisonconfigservice.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.visits.prison.config.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.visits.prison.config.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.function.Consumer
 
 class HealthCheckTest : IntegrationTestBase() {
 
   @Test
   fun `Health page reports ok`() {
-    stubPingWithResponse(200)
+    hmppsAuth.stubHealthPing(200)
 
     webTestClient.get()
       .uri("/health")
@@ -19,18 +24,17 @@ class HealthCheckTest : IntegrationTestBase() {
   }
 
   @Test
-  fun `Health page reports down`() {
-    stubPingWithResponse(503)
+  fun `Health info reports version`() {
+    hmppsAuth.stubHealthPing(200)
 
-    webTestClient.get()
-      .uri("/health")
+    webTestClient.get().uri("/health")
       .exchange()
-      .expectStatus()
-      .is5xxServerError
-      .expectBody()
-      .jsonPath("status").isEqualTo("DOWN")
-      .jsonPath("components.hmppsAuth.status").isEqualTo("DOWN")
-      .jsonPath("components.exampleApi.status").isEqualTo("DOWN")
+      .expectStatus().isOk
+      .expectBody().jsonPath("components.healthInfo.details.version").value(
+        Consumer<String> {
+          assertThat(it).startsWith(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE))
+        },
+      )
   }
 
   @Test
