@@ -113,7 +113,7 @@ workflows:
           slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           context:
             - hmpps-common-vars
-            - visit-someone-in-prison-backend-svc-preprod
+            - visit-someone-in-prison-backend-svc-prod
           filters:
             branches:
               only:
