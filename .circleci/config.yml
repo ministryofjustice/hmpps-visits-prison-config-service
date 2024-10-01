@@ -35,26 +35,33 @@ jobs:
 
 workflows:
   version: 2
-  build-test-and-deploy:
+  build-test-deploy-main:
     jobs:
       - validate:
           filters:
             tags:
               ignore: /.*/
+            branches:
+              only:
+                - main
+
       - hmpps/helm_lint:
           name: helm_lint
+          filters:
+            branches:
+              only:
+                - main
+
       - hmpps/build_multiplatform_docker:
           name: build_docker
           filters:
             branches:
               only:
                 - main
+
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
-          jira_update: true
-          pipeline_id: <<pipeline.id>>
-          pipeline_number: <<pipeline.number>>
           context: hmpps-common-vars
           filters:
             branches:
@@ -64,12 +71,7 @@ workflows:
             - validate
             - build_docker
             - helm_lint
-          helm_timeout: 5m
 
-      - request-staging-approval:
-          type: approval
-          requires:
-            - deploy_dev
       - hmpps/deploy_env:
           name: deploy_staging
           env: "staging"
@@ -81,44 +83,119 @@ workflows:
               only:
                 - main
           requires:
-            - request-staging-approval
-
-      - request-preprod-approval:
-          type: approval
-          requires:
             - deploy_dev
+
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
-          jira_update: true
-          jira_env_type: staging
-          pipeline_id: <<pipeline.id>>
-          pipeline_number: <<pipeline.number>>
           context:
             - hmpps-common-vars
             - hmpps-visits-prison-config-service-preprod
+          filters:
+            branches:
+              only:
+                - main
           requires:
             - request-preprod-approval
-          helm_timeout: 5m
-      - request-prod-approval:
+      - request-preprod-approval:
           type: approval
           requires:
-            - deploy_preprod
+            - deploy_staging
+          filters:
+            branches:
+              only:
+                - main
+
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
-          jira_update: true
-          jira_env_type: production
-          pipeline_id: <<pipeline.id>>
-          pipeline_number: <<pipeline.number>>
           slack_notification: true
           slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           context:
             - hmpps-common-vars
             - hmpps-visits-prison-config-service-prod
+          filters:
+            branches:
+              only:
+                - main
           requires:
             - request-prod-approval
-          helm_timeout: 5m
+      - request-prod-approval:
+          type: approval
+          requires:
+            - deploy_preprod
+          filters:
+            branches:
+              only:
+                - main
+
+  build-test-deploy-feature:
+    jobs:
+      - validate:
+          filters:
+            tags:
+              ignore: /.*/
+            branches:
+              ignore:
+                - main
+
+      - hmpps/helm_lint:
+          name: helm_lint
+          filters:
+            branches:
+              ignore:
+                - main
+
+      - hmpps/build_multiplatform_docker:
+          name: build_docker
+          filters:
+            branches:
+              ignore:
+                - main
+
+      - hmpps/deploy_env:
+          name: deploy_dev
+          env: "dev"
+          context: hmpps-common-vars
+          filters:
+            branches:
+              ignore:
+                - main
+          requires:
+            - request-dev-approval
+      - request-dev-approval:
+          type: approval
+          requires:
+            - validate
+            - build_docker
+            - helm_lint
+          filters:
+            branches:
+              ignore:
+                - main
+
+      - hmpps/deploy_env:
+          name: deploy_staging
+          env: "staging"
+          context:
+            - hmpps-common-vars
+            - visit-someone-in-prison-backend-svc-staging
+          filters:
+            branches:
+              ignore:
+                - main
+          requires:
+            - request-staging-approval
+      - request-staging-approval:
+          type: approval
+          requires:
+            - validate
+            - build_docker
+            - helm_lint
+          filters:
+            branches:
+              ignore:
+                - main
 
   security:
     triggers:
@@ -156,6 +233,7 @@ workflows:
     jobs:
       - hmpps/veracode_policy_scan:
           slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          jdk_tag: "21.0"
           context:
             - veracode-credentials
             - hmpps-common-vars
