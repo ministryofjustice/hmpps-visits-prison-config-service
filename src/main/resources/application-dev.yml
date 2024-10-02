@@ -3,3 +3,11 @@ hmpps:
     url: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     timeout: 10s
 
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/visit_scheduler
+    username: visit_scheduler
+    password: visit_scheduler
+
+  jpa:
+    show-sql: true
