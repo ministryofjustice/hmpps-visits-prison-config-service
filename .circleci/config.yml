@@ -45,7 +45,7 @@ jobs:
           name: Get flyway migrations from visit-scheduler
           command: |
             git clone https://github.com/ministryofjustice/visit-scheduler.git
-            cp -r visit-scheduler/db.migrations ./migrations
+            cp -r visit-scheduler/src/main/resources/db/migrations ./migrations
       - run:
           name: Run migrations
           command: |
