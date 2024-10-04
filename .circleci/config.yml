@@ -27,9 +27,6 @@ jobs:
       - run:
           name: Wait for Postgres to be ready
           command: ./postgres-check.sh
-      - run:
-          name: Wait for Postgres to be ready
-          command: ./postgres-check.sh
       - restore_cache:
           keys:
             - gradle-{{ checksum "build.gradle.kts" }}
