@@ -14,15 +14,39 @@ parameters:
 jobs:
   validate:
     executor:
-      name: hmpps/java
-      tag: "21.0"
+      name: hmpps/java_postgres
+      jdk_tag: "21.0"
+      postgres_tag: "15"
+      postgres_username: "visit_scheduler"
+      postgres_password: "visit_scheduler"
+      postgres_db: "visit_scheduler"
+    environment:
+      _JAVA_OPTIONS: -Xmx500m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
     steps:
       - checkout
       - restore_cache:
           keys:
             - gradle-{{ checksum "build.gradle.kts" }}
             - gradle-
+      - hmpps/wait_till_ready_postgres
       - run:
+          name: Install git and flyway
+          command: |
+            sudo apt-get update && sudo apt-get install -y git
+            curl -L https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/8.5.10/flyway-commandline-8.5.10-linux-x64.tar.gz -o flyway.tar.gz
+            tar -xzf flyway.tar.gz
+            sudo ln -s `pwd`/flyway-8.5.10/flyway /usr/local/bin/flyway
+      - run:
+          name: Get flyway migrations from visit-scheduler
+          command: |
+            git clone https://github.com/ministryofjustice/visit-scheduler.git
+            cp -r visit-scheduler/src/main/resources/db/migration ./migrations
+      - run:
+          name: Run migrations
+          command: |
+            flyway -url=jdbc:postgresql://localhost:5432/visit_scheduler -user=visit_scheduler -password=visit_scheduler -locations=filesystem:./migrations migrate
+      - run:
+          name: Run checkstyle and integration tests
           command: ./gradlew check
       - save_cache:
           paths:
