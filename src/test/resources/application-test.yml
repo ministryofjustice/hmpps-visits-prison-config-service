@@ -9,11 +9,24 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/visit_scheduler
+    username: visit_scheduler
+    password: visit_scheduler
+    hikari:
+      maximum-pool-size: 2
+
+  jpa:
+    show-sql: true
+
   security:
     oauth2:
       resourceserver:
         jwt:
           public-key-location: classpath:local-public-key.pub
 
-
 hmpps.auth.url: http://localhost:8090/auth
+
+
+

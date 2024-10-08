@@ -1,7 +1,8 @@
 plugins {
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "6.0.6"
-  kotlin("plugin.spring") version "2.0.20"
   id("org.jetbrains.kotlin.plugin.noarg") version "2.0.20"
+  kotlin("plugin.spring") version "2.0.20"
+  kotlin("plugin.jpa") version "2.0.20"
 }
 
 configurations {
@@ -22,6 +23,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-cache")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
   implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.8.0")
@@ -31,12 +33,15 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
   implementation("org.springdoc:springdoc-openapi-starter-common:2.6.0")
 
+  runtimeOnly("org.postgresql:postgresql:42.7.4")
+
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.22")
   testImplementation("org.wiremock:wiremock-standalone:3.9.1")
   testImplementation("org.mockito:mockito-inline:5.2.0")
   testImplementation("org.awaitility:awaitility-kotlin:4.2.2")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.jsonwebtoken:jjwt:0.12.6")
+  testImplementation("org.testcontainers:postgresql:1.20.1")
 }
 
 java {
@@ -47,4 +52,8 @@ tasks {
   withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     compilerOptions.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
   }
+}
+
+allOpen {
+  annotation("javax.persistence.Entity")
 }
